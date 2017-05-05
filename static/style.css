@@ -1,0 +1,52 @@
+@font-face {
+  font-family: 'ExpertSans';
+  src: url('ExpertSans-Regular.ttf');
+}
+body {
+  font-family: 'ExpertSans';
+  padding-top: 120px;
+}
+
+#main-nav {
+  background-color: white!important;
+}
+
+#awaiting {
+  padding-top: 12.5%;
+}
+
+#amount {
+  color: #62C083;
+}
+
+#payment-confirmed {
+  display: none;
+  font-size: 3em;
+}
+
+div#payment-container {
+  height: 16em;
+  position: relative;
+}
+
+.navbar-brand {
+  height: 100%;
+  padding: 0.1em;
+}
+
+
+.navbar-default .navbar-brand {
+  color: #fff!important;
+  padding: 0.1em!important;
+}
+
+.navbar-brand img {
+  margin-top: 5px;
+  margin-left: 5px;
+  }
+}
+.navbar-brand {
+  float: left;
+  height: 100%; 
+  padding: 0;
+}
