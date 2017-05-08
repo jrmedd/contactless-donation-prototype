@@ -1,5 +1,7 @@
 ## Overview
 
+![Device in action](https://github.com/jrmedd/contactless-donation-prototype/blob/master/in_action.gif?raw=true)
+
 In the world of UX development, testing new products can be difficult, particularly where transactions are involved, or where concepts are not yet fully developed. Rapid prototyping enables you to create functioning prototypes & simulations for these scenarios.
 
 At [The Landing](http://www.thelanding.org.uk/) in [MediaCityUK](http://www.mediacityuk.co.uk/), home of Salford’s [Eagle Lab](http://www.thelanding.org.uk/spaces-services/eagle-labs/), we created a physical representation of a charitable donation device for user testing, devised by [Pingit](https://www.pingit.com/#!/). Since then we printed and programmed a device to simulate donations with contactless payment.
