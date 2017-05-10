@@ -1,4 +1,7 @@
 from flask import Flask, flash, url_for, render_template, request, redirect, make_response, Response, jsonify
+from flask_socketio import SocketIO
+from flask_cors import CORS, cross_origin
+
 from pymongo import MongoClient
 import datetime
 
@@ -12,16 +15,19 @@ app = Flask(__name__)
 
 app.secret_key = "829c63b4c6fe351bc517a048a529638660185e32a83aba5e"
 
+socketio = SocketIO(app)
+
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html',ip=my_ip)
 
 #URL for logging payments to MongoDB (call from wherever)
 @app.route('/payment/<card_id>/<amount>')
 def payment(card_id, amount):
-    details = {'timestamp':datetime.datetime.now()} #create dict to insert into MongoDB
-    details.update({'card_id':card_id})
+    details = {'card_id':card_id} #create dict to insert into MongoDB
     details.update({'amount':amount})
+    socketio.emit('payment', details) #send basic details for feedback in-app
+    details.update({'timestamp':datetime.datetime.now()})
     card_holder  = card_holders.find_one({'card_id':card_id})
     if card_holder:
         details.update({'name':card_holder.get('name')}) #try to find card holder in database
@@ -47,4 +53,4 @@ def payments_today():
     return jsonify(results = results, total = total)
 
 if __name__ == '__main__':
-	app.run(host = my_ip,debug = True)
+    socketio.run(app, host=my_ip, debug=True)

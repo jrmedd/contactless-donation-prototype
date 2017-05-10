@@ -56,7 +56,37 @@
 </div>
 
 <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
-<script src="http://192.168.2.1:8081/socket.io/socket.io.js"></script>
-<script src="{{ url_for('static', filename='paymentResponder.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='socket.io.min.js') }}"></script>
+<script>
+var myIP = "{{ ip }}";
+function updateTable() {
+  $.getJSON('http://'+myIP+':5000/today', function(data) {
+    var payments = data.results;
+    $('#running-total').html(data.total);
+    $('#recent-payments').empty();
+    $('#recent-payments').addClass('table');
+    $('#recent-payments').append('<tr><th>Name</th><th>Donation</th><th>Time</th></tr>');
+    $.each(payments,function(idx, val) {
+      $('#recent-payments').append(
+        '<tr><td>'+val['name']+'</td><td>£'+val['amount']+'</td><td>'+val['timestamp']+'</td></tr>');
+    });
+  });
+};
+
+updateTable();
+var socket = io.connect('http://' + '{{ ip }}' + ':' + location.port);
+socket.on('connect', function() {
+  socket.emit('handshake', {'message': 'Client connected'});
+});
+
+socket.on('payment', function(paymentInfo) {
+  console.log(paymentInfo)
+  card_id = paymentInfo.card_id;
+  amount = paymentInfo.amount;
+  $("#amount").html('£'+amount);
+  $("#payment-confirmed").fadeIn().delay(750).fadeOut();
+  window.setTimeout(updateTable, 2000);
+});
+</script>
 </body>
 </html>

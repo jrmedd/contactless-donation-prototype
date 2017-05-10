@@ -1,4 +1,4 @@
-import binascii, datetime, OSC, requests
+import binascii, datetime, requests
 import Adafruit_PN532 as PN532
 
 CS   = 18
@@ -9,10 +9,8 @@ SCLK = 25
 pn532 = PN532.PN532(cs=CS, sclk=SCLK, mosi=MOSI, miso=MISO)
 pn532.begin()
 
-client = OSC.OSCClient()
 server_ip = "192.168.2.1"
-server_url = "http://%s:5000/payment/" % (server_ip)
-client.connect((server_ip, 3333))
+server_url = "http://%s:5000/payment" % (server_ip)
 
 wait_between_payments = 3
 
@@ -33,13 +31,8 @@ while True:
     card_holder = binascii.hexlify(uid)
     if datetime.datetime.now() > next_valid_time:
         if card_holder != None:
-            oscmsg = OSC.OSCMessage()
-            oscmsg.setAddress('/payment')
-            oscmsg.append(card_holder)
             amount = card_holder_preset_value.get(card_holder)
             if amount == None:
                 amount = standard_amount
-            oscmsg.append(amount)
-            client.send(oscmsg)
-            payment = requests.get(server_url + card_holder + '/' + amount)
+            payment = requests.get("%s/%s/%s" % (server_url, card_holder, amount))
             next_valid_time = datetime.datetime.now() + datetime.timedelta(seconds=wait_between_payments)
